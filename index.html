@@ -3,9 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>layout 01</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/gsap-latest-beta.min.js"></script>
+    <script src="https://assets.codepen.io/16327/ScrollTrigger.min.js"></script>
+
+    <style>
+        *{margin:0;padding:0;}
+        section{width:100%;height:100vh;display:flex;align-items:center;justify-content:center;font-size:40px;}
+        .section-02{background-color:black;color:#fff;}
+    </style>
 </head>
 <body>
-    
+    <div id="wrap">
+        <section class="section-01">SECTION 01</section>
+        <section class="section-02">
+            <p id="number">83500</p>
+        </section>
+        <section class="section-03">SECTION 03</section>
+    </div>
+
+    <script>
+        var number = { val: 83500 }
+        var falseChk1 = true,
+            falseChk2 = true,
+            falseChk3 = true;
+        var section2 = $('.section-02');
+
+        gsap.timeline({
+        scrollTrigger: {
+            trigger: section2,
+            pin: true,
+            start: 'center center',
+            end: '+=600%',
+            onUpdate: function(self){
+            const _dgree = self.progress;
+            const _progress = Math.floor(_dgree * 100);
+            console.log(_progress);
+            
+            // 프로그래스로 조건문 걸어서 숫자 교체
+            if(0 < _progress && _progress <= 30) {
+                if(falseChk1) {
+                falseChk1 = false;
+                falseChk2 = true;
+                falseChk3 = true;
+                gsap.to(number, {
+                    val: 83500,
+                    duration: '0.5',
+                    onUpdate: function() {
+                    onChangeCount();
+                    }
+                });
+                }
+            } else if (30 < _progress && _progress <= 60){
+                if(falseChk2) {
+                falseChk1 = true;
+                falseChk2 = false;
+                falseChk3 = true;
+                gsap.to(number, {
+                    val: 500,
+                    duration: '0.5',
+                    onUpdate: function() {
+                    onChangeCount();
+                    }
+                });
+                }
+                
+            } else if (60 < _progress && _progress <= 100) {
+                if(falseChk3) {
+                falseChk1 = true;
+                falseChk2 = true;
+                falseChk3 = false;
+                gsap.to(number, {
+                    val: 3000,
+                    duration: '0.5',
+                    onUpdate: function() {
+                    onChangeCount();
+                    }
+                });
+                }
+            }
+            }
+        }
+        })
+
+        // 카운트 변경 함수
+        function onChangeCount() {
+        section2.find('#number').text(Math.floor(number.val));  
+        }
+    </script>
 </body>
 </html>
